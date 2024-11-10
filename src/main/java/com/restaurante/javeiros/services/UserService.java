@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,6 +37,9 @@ public class UserService {
 
     @Autowired
     private SecurityConfiguration securityConfiguration;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Método responsável por autenticar um usuário e retornar um token JWT
     public RecoveryJwtTokenDto authenticateUser(LoginUserDto loginUserDto) {
@@ -94,6 +99,22 @@ public class UserService {
                 .updatedDate(LocalDateTime.now())
                 .build();
 
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void updatePassword(Long userId, String currentPassword, String newPassword) throws Exception {
+        // Find the user by username or throw an exception if not found
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // Check if the current password matches
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new Exception("Current password is incorrect");
+        }
+
+        // Encode and set the new password, then save the user
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 }
