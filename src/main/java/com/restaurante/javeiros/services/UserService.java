@@ -82,7 +82,17 @@ public class UserService {
     @Transactional
     public void updateUser(UserDto userDto) {
         User user = User.builder()
-                .id(userDto.id())
+                .name(userDto.name())
+                .email(userDto.email())
+                .login(userDto.login())
+                // Codifica a senha do usuário com o algoritmo bcrypt
+                .password(securityConfiguration.passwordEncoder().encode(userDto.password()))
+                // Atribui ao usuário uma permissão específica
+                .roles(List.of(Role.builder().name(userDto.role()).build()))
+                .address(userDto.address())
+                .updatedDate(LocalDateTime.now())
                 .build();
+
+        userRepository.save(user);
     }
 }

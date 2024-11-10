@@ -9,5 +9,5 @@ public record UserDto(
         String login,
         String password,
         RoleName role,
-        String adress) {
+        String address) {
 }
