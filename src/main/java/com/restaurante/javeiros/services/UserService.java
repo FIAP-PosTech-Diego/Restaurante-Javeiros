@@ -82,6 +82,7 @@ public class UserService {
     @Transactional
     public void updateUser(UserDto userDto) {
         User user = User.builder()
+                .id(userDto.id())
                 .name(userDto.name())
                 .email(userDto.email())
                 .login(userDto.login())
