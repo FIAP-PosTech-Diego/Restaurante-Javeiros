@@ -10,6 +10,8 @@ import com.restaurante.javeiros.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,10 +41,28 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @PutMapping("/update-user")
-    public ResponseEntity<Void> updateUser(@RequestBody UserDto userDto){
-        userService.updateUser(userDto);
+//    @PutMapping("/update-user")
+//    public ResponseEntity<Void> updateUser(@RequestBody UserDto userDto){
+//        userService.updateUser(userDto);
+//        return ResponseEntity.ok().build();
+//    }
+
+    @PutMapping()
+    public ResponseEntity<?> updateUser(@RequestBody UserDto userDt) {
+        // Use Spring Security to get the authenticated user from the security context
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+
+        // Verify that the authenticated user is the same as the user being updated
+        if (!authenticatedUser.getId().equals(userDt.id())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Update the user information
+        userService.updateUser(userDt);
+
         return ResponseEntity.ok().build();
     }
+
 
 }
