@@ -4,6 +4,7 @@ package com.restaurante.javeiros.controller;
 import com.restaurante.javeiros.dto.CreateUserDto;
 import com.restaurante.javeiros.dto.LoginUserDto;
 import com.restaurante.javeiros.dto.RecoveryJwtTokenDto;
+import com.restaurante.javeiros.dto.UserDto;
 import com.restaurante.javeiros.entitities.User;
 import com.restaurante.javeiros.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,12 @@ public class UserController {
     public ResponseEntity<List<User>> getAll() {
         List<User> users = userService.getAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @PutMapping("/update-user")
+    public ResponseEntity<Void> updateUser(@RequestBody UserDto userDto){
+        userService.updateUser(userDto);
+        return ResponseEntity.ok().build();
     }
 
 }

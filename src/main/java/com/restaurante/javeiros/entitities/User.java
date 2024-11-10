@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Table(name = "users")
@@ -20,9 +21,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(name = "name")
+    private String name;
+
+    @Column(unique = true, name = "email")
     private String email;
 
+    @Column(name = "login")
+    private String login;
+
+    @Column(unique = true, name = "password")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
@@ -30,5 +38,11 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name="role_id"))
     private List<Role> roles;
+
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
+
+    @Column(name = "address")
+    private String address;
 
 }
