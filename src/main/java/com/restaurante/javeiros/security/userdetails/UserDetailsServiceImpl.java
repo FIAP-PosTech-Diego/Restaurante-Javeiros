@@ -1,7 +1,7 @@
 package com.restaurante.javeiros.security.userdetails;
 
-import com.restaurante.javeiros.entitities.User;
-import com.restaurante.javeiros.repositories.UserRepository;
+import com.restaurante.javeiros.user.entitities.User;
+import com.restaurante.javeiros.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

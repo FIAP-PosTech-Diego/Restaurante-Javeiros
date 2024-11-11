@@ -1,12 +1,14 @@
-package com.restaurante.javeiros.services;
+package com.restaurante.javeiros.user.services;
 
 
-import com.restaurante.javeiros.dto.CreateUserDto;
-import com.restaurante.javeiros.dto.LoginUserDto;
-import com.restaurante.javeiros.dto.RecoveryJwtTokenDto;
-import com.restaurante.javeiros.dto.UserDto;
-import com.restaurante.javeiros.entitities.User;
-import com.restaurante.javeiros.repositories.UserRepository;
+import com.restaurante.javeiros.user.dto.CreateUserDto;
+import com.restaurante.javeiros.user.dto.LoginUserDto;
+import com.restaurante.javeiros.user.dto.RecoveryJwtTokenDto;
+import com.restaurante.javeiros.user.dto.UserDto;
+import com.restaurante.javeiros.user.entitities.User;
+import com.restaurante.javeiros.exception.HttpStatusProject;
+import com.restaurante.javeiros.user.exception.UserException;
+import com.restaurante.javeiros.user.repositories.UserRepository;
 import com.restaurante.javeiros.security.authentication.JwtTokenService;
 import com.restaurante.javeiros.security.config.SecurityConfiguration;
 import com.restaurante.javeiros.security.userdetails.UserDetailsImpl;
@@ -40,40 +42,31 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Método responsável por autenticar um usuário e retornar um token JWT
     public RecoveryJwtTokenDto authenticateUser(LoginUserDto loginUserDto) {
-        // Cria um objeto de autenticação com o email e a senha do usuário
+
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUserDto.email(), loginUserDto.password());
 
-        // Autentica o usuário com as credenciais fornecidas
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
-        // Obtém o objeto UserDetails do usuário autenticado
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        // Gera um token JWT para o usuário autenticado
        return new RecoveryJwtTokenDto(jwtTokenService.generateToken(userDetails));
     }
 
-    // Método responsável por criar um usuário
     @Transactional
     public void createUser(CreateUserDto createUserDto) {
 
-        // Cria um novo usuário com os dados fornecidos
         User newUser = User.builder()
                 .name(createUserDto.name())
                 .email(createUserDto.email())
                 .login(createUserDto.login())
-                // Codifica a senha do usuário com o algoritmo bcrypt
                 .password(securityConfiguration.passwordEncoder().encode(createUserDto.password()))
-                // Atribui ao usuário uma permissão específica
                 .role(createUserDto.role())
                 .address(createUserDto.address())
                 .updatedDate(LocalDateTime.now())
                 .build();
 
-        // Salva o novo usuário no banco de dados
         userRepository.save(newUser);
     }
 
@@ -90,9 +83,7 @@ public class UserService {
                 .name(userDto.name())
                 .email(userDto.email())
                 .login(userDto.login())
-                // Codifica a senha do usuário com o algoritmo bcrypt
                 .password(securityConfiguration.passwordEncoder().encode(userDto.password()))
-                // Atribui ao usuário uma permissão específica
                 .role(userDto.role())
                 .address(userDto.address())
                 .updatedDate(LocalDateTime.now())
@@ -102,17 +93,14 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(Long userId, String currentPassword, String newPassword) throws Exception {
-        // Find the user by username or throw an exception if not found
+    public void updatePassword(Long userId, String currentPassword, String newPassword) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // Check if the current password matches
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new Exception("Current password is incorrect");
+            throw new UserException("Current password is incorrect", HttpStatusProject.VALIDATION);
         }
 
-        // Encode and set the new password, then save the user
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }

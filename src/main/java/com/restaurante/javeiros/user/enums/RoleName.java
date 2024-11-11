@@ -1,4 +1,4 @@
-package com.restaurante.javeiros.enums;
+package com.restaurante.javeiros.user.enums;
 
 public enum RoleName {
 

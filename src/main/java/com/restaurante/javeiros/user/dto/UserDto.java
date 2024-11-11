@@ -1,6 +1,6 @@
-package com.restaurante.javeiros.dto;
+package com.restaurante.javeiros.user.dto;
 
-import com.restaurante.javeiros.enums.RoleName;
+import com.restaurante.javeiros.user.enums.RoleName;
 
 public record UserDto(
         Long id,

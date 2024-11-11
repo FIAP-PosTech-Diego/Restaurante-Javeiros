@@ -1,6 +1,6 @@
-package com.restaurante.javeiros.repositories;
+package com.restaurante.javeiros.user.repositories;
 
-import com.restaurante.javeiros.entitities.User;
+import com.restaurante.javeiros.user.entitities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

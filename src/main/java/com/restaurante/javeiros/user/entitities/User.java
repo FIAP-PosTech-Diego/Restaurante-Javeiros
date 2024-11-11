@@ -1,11 +1,10 @@
-package com.restaurante.javeiros.entitities;
+package com.restaurante.javeiros.user.entitities;
 
-import com.restaurante.javeiros.enums.RoleName;
+import com.restaurante.javeiros.user.enums.RoleName;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Table(name = "users")
 @Entity(name = "User")
