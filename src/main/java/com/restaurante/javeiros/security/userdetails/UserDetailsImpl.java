@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
@@ -28,10 +29,11 @@ public class UserDetailsImpl implements UserDetails {
          novo SimpleGrantedAuthority, que é uma implementação simples de
          GrantedAuthority
         */
-        return user.getRoles()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList());
+        return List.of(new SimpleGrantedAuthority(user.getRole().name()));
+//        return user.getRoles()
+//                .stream()
+//                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+//                .collect(Collectors.toList());
     }
 
     @Override

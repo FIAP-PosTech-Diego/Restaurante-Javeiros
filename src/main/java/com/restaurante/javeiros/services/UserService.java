@@ -5,7 +5,6 @@ import com.restaurante.javeiros.dto.CreateUserDto;
 import com.restaurante.javeiros.dto.LoginUserDto;
 import com.restaurante.javeiros.dto.RecoveryJwtTokenDto;
 import com.restaurante.javeiros.dto.UserDto;
-import com.restaurante.javeiros.entitities.Role;
 import com.restaurante.javeiros.entitities.User;
 import com.restaurante.javeiros.repositories.UserRepository;
 import com.restaurante.javeiros.security.authentication.JwtTokenService;
@@ -69,7 +68,7 @@ public class UserService {
                 // Codifica a senha do usuário com o algoritmo bcrypt
                 .password(securityConfiguration.passwordEncoder().encode(createUserDto.password()))
                 // Atribui ao usuário uma permissão específica
-                .roles(List.of(Role.builder().name(createUserDto.role()).build()))
+                .role(createUserDto.role())
                 .address(createUserDto.address())
                 .updatedDate(LocalDateTime.now())
                 .build();
@@ -94,7 +93,7 @@ public class UserService {
                 // Codifica a senha do usuário com o algoritmo bcrypt
                 .password(securityConfiguration.passwordEncoder().encode(userDto.password()))
                 // Atribui ao usuário uma permissão específica
-                .roles(List.of(Role.builder().name(userDto.role()).build()))
+                .role(userDto.role())
                 .address(userDto.address())
                 .updatedDate(LocalDateTime.now())
                 .build();

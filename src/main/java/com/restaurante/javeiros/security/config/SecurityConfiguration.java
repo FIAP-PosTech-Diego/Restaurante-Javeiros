@@ -35,7 +35,8 @@ public class SecurityConfiguration {
     // Endpoints que requerem autenticação para serem acessados
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
             "/users/test",
-            "/users/update-user"
+            "/users/update-user",
+            "/users/update-password"
     };
 
     // Endpoints que só podem ser acessador por usuários com permissão de cliente
@@ -62,7 +63,7 @@ public class SecurityConfiguration {
                     .requestMatchers(ENDPOINTS_CUSTOMER).hasRole("CUSTOMER")
                     .anyRequest().denyAll()
                 )
-                .addFilterBefore(new UserAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
 
 //        return httpSecurity.csrf().disable() // Desativa a proteção contra CSRF
