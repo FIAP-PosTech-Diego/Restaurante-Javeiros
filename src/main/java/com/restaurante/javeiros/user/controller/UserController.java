@@ -9,6 +9,7 @@ import com.restaurante.javeiros.user.entitities.User;
 import com.restaurante.javeiros.exception.HttpStatusProject;
 import com.restaurante.javeiros.user.exception.UserException;
 import com.restaurante.javeiros.user.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UserController {
 
     @Autowired
@@ -27,12 +29,14 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(@RequestBody LoginUserDto loginUserDto) {
+        log.info("Login user - email: {}", loginUserDto.email());
         RecoveryJwtTokenDto token = userService.authenticateUser(loginUserDto);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Void> createUser(@RequestBody CreateUserDto createUserDto) {
+        log.info("Creating user - email: {}", createUserDto.email());
         userService.createUser(createUserDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -44,15 +48,17 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity<?> updateUser(@RequestBody UserDto userDt) {
+    public ResponseEntity<?> updateUser(@RequestBody UserDto userDto) {
+        log.info("Updating user - id: {}", userDto.id());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User authenticatedUser = (User) authentication.getPrincipal();
 
-        if (!authenticatedUser.getId().equals(userDt.id())) {
+        if (!authenticatedUser.getId().equals(userDto.id())) {
+            log.error("User authenticated is different from the request");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        userService.updateUser(userDt);
+        userService.updateUser(userDto);
 
         return ResponseEntity.ok().build();
     }
@@ -63,8 +69,10 @@ public class UserController {
             @RequestParam String currentPassword,
             @RequestParam String newPassword,
             @RequestParam String confirmNewPassword) {
+        log.info("Updating password user - id: {}", userId);
 
         if (!newPassword.equals(confirmNewPassword)) {
+            log.error("Password and confirm password are different");
             throw new UserException("Passwords are different", HttpStatusProject.VALIDATION);
         }
 

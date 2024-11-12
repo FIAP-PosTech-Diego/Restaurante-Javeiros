@@ -13,6 +13,7 @@ import com.restaurante.javeiros.security.authentication.JwtTokenService;
 import com.restaurante.javeiros.security.config.SecurityConfiguration;
 import com.restaurante.javeiros.security.userdetails.UserDetailsImpl;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserService {
 
     @Autowired
@@ -98,6 +100,7 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            log.error("Password encoder does not match with current password");
             throw new UserException("Current password is incorrect", HttpStatusProject.VALIDATION);
         }
 
