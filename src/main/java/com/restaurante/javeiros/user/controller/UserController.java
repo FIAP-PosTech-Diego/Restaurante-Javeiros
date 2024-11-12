@@ -9,6 +9,9 @@ import com.restaurante.javeiros.user.entitities.User;
 import com.restaurante.javeiros.exception.HttpStatusProject;
 import com.restaurante.javeiros.user.exception.UserException;
 import com.restaurante.javeiros.user.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,12 +25,20 @@ import java.util.List;
 @RestController("UserController")
 @RequestMapping("/user")
 @Slf4j
+@Tag(name = "User", description = "Controller to authorization and crud user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @PostMapping("/login")
+    @Operation(
+            description = "Login user using email and password",
+            summary = "Login user",
+            responses = {
+                    @ApiResponse(description = "Token", responseCode = "200")
+            }
+    )
     public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(@RequestBody LoginUserDto loginUserDto) {
         log.info("Login user - email: {}", loginUserDto.email());
         RecoveryJwtTokenDto token = userService.authenticateUser(loginUserDto);

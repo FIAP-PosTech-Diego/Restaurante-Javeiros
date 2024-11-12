@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -30,7 +32,29 @@ public class SecurityConfiguration  {
             "/user/login",
             "/user",
             "/user/get-all",
-            "/h2-console/**",
+            "/h2-console",
+            "/h2-console/",
+            "/h2-console/stylesheet.css",
+            "/h2-console/login.jsp",
+            "/h2-console/background.gif",
+            "/favicon.ico",
+            "/h2-console/login.do",
+            "/h2-console/tables.do",
+            "/h2-console/help.jsp",
+            "/h2-console/header.jsp",
+            "/h2-console/query.jsp",
+            "/h2-console/test.do",
+            "/h2-console/icon_disconnect.gif",
+            "/h2-console/icon_line.gif",
+            "/h2-console/icon_commit.gif",
+            "/h2-console/icon_stop.gif",
+            "/h2-console/icon_run.gif",
+            "/h2-console/tree.js",
+            "/h2-console/icon_help.gif",
+            "/h2-console/icon_history.gif",
+            "/h2-console/icon_rollback.gif",
+            "/h2-console/icon_run_selected.gif",
+
             "/swagger-ui/index.html",
             "/swagger-ui/swagger-ui.css",
             "/swagger-ui/swagger-ui-bundle.js",
@@ -61,11 +85,17 @@ public class SecurityConfiguration  {
                 )
                 .authorizeHttpRequests((authz) -> authz
                     .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
+//                        .requestMatchers(antMatcher("/swagger-ui/**"),
+//                                antMatcher("/swagger-ui.html"),
+//                                antMatcher("/v3/**"),
+//                                antMatcher("/h2-console/**")).permitAll()
                     .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_REQUIRED).authenticated()
                     .requestMatchers(ENDPOINTS_ADMIN).hasRole("ADMINISTRATOR")
                     .requestMatchers(ENDPOINTS_CUSTOMER).hasRole("CUSTOMER")
                     .anyRequest().denyAll()
                 )
+                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)) // This so embedded frames in h2-console are working
+                .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
