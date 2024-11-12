@@ -24,25 +24,22 @@ public class SecurityConfiguration {
     private UserAuthenticationFilter userAuthenticationFilter;
 
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
-            "/users/login",
-            "/users",
-            "/users/get-all",
-            "/h2-console/**"
-
+            "/user/login",
+            "/user",
+            "/user/get-all"
     };
 
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
-            "/users/test",
-            "/users/update-user",
-            "/users/update-password"
+            "/user/update-user",
+            "/user/update-password"
     };
 
     public static final String [] ENDPOINTS_CUSTOMER = {
-            "/users/test/customer"
+            "/user/test/customer"
     };
 
     public static final String [] ENDPOINTS_ADMIN = {
-            "/users/test/administrator"
+            "/user/test/administrator"
     };
 
     @Bean
