@@ -10,6 +10,8 @@ import com.restaurante.javeiros.exception.HttpStatusProject;
 import com.restaurante.javeiros.user.exception.UserException;
 import com.restaurante.javeiros.user.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +67,9 @@ public class UserController {
             description = "Retrieve all users from the system",
             summary = "Get all users",
             responses = {
-                    @ApiResponse(description = "List of users", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+                    @ApiResponse(description = "List of users", responseCode = "200",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = User.class))),
                     @ApiResponse(description = "No users found", responseCode = "404")
             }
     )
