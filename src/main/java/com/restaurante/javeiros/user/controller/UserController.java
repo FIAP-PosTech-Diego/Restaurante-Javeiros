@@ -47,8 +47,12 @@ public class UserController {
 
     @PostMapping
     @Operation(
-            description = "Login user using email and password",
-            summary = "Login user"
+            description = "Create a new user with provided details",
+            summary = "Create a user",
+            responses = {
+                    @ApiResponse(description = "User created successfully", responseCode = "201"),
+                    @ApiResponse(description = "Bad Request - Invalid data", responseCode = "400")
+            }
     )
     public ResponseEntity<Void> createUser(@RequestBody CreateUserDto createUserDto) {
         log.info("Creating user - email: {}", createUserDto.email());
@@ -57,12 +61,29 @@ public class UserController {
     }
 
     @GetMapping("/get-all")
+    @Operation(
+            description = "Retrieve all users from the system",
+            summary = "Get all users",
+            responses = {
+                    @ApiResponse(description = "List of users", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+                    @ApiResponse(description = "No users found", responseCode = "404")
+            }
+    )
     public ResponseEntity<List<User>> getAll() {
         List<User> users = userService.getAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PutMapping()
+    @Operation(
+            description = "Update the user details",
+            summary = "Update user information",
+            responses = {
+                    @ApiResponse(description = "User updated successfully", responseCode = "200"),
+                    @ApiResponse(description = "Unauthorized - User mismatch", responseCode = "401"),
+                    @ApiResponse(description = "Bad Request - Invalid user data", responseCode = "400")
+            }
+    )
     public ResponseEntity<?> updateUser(@RequestBody UserDto userDto) {
         log.info("Updating user - id: {}", userDto.id());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -79,6 +100,16 @@ public class UserController {
     }
 
     @PatchMapping("/update-password")
+    @Operation(
+            description = "Update the password for a user",
+            summary = "Update user password",
+            responses = {
+                    @ApiResponse(description = "Password updated successfully", responseCode = "200"),
+                    @ApiResponse(description = "Bad Request - Passwords do not match", responseCode = "400"),
+                    @ApiResponse(description = "Unauthorized - Invalid current password", responseCode = "401"),
+                    @ApiResponse(description = "User not found", responseCode = "404")
+            }
+    )
     public ResponseEntity<Void> updatePassword(
             @RequestParam Long userId,
             @RequestParam String currentPassword,
