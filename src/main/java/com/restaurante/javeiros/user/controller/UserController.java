@@ -46,6 +46,10 @@ public class UserController {
     }
 
     @PostMapping
+    @Operation(
+            description = "Login user using email and password",
+            summary = "Login user"
+    )
     public ResponseEntity<Void> createUser(@RequestBody CreateUserDto createUserDto) {
         log.info("Creating user - email: {}", createUserDto.email());
         userService.createUser(createUserDto);
