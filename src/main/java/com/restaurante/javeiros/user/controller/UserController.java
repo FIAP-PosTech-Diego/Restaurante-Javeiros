@@ -62,21 +62,21 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-all")
-    @Operation(
-            description = "Retrieve all users from the system",
-            summary = "Get all users",
-            responses = {
-                    @ApiResponse(description = "List of users", responseCode = "200",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = User.class))),
-                    @ApiResponse(description = "No users found", responseCode = "404")
-            }
-    )
-    public ResponseEntity<List<User>> getAll() {
-        List<User> users = userService.getAll();
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
+//    @GetMapping("/get-all")
+//    @Operation(
+//            description = "Retrieve all users from the system",
+//            summary = "Get all users",
+//            responses = {
+//                    @ApiResponse(description = "List of users", responseCode = "200",
+//                            content = @Content(mediaType = "application/json",
+//                                    schema = @Schema(implementation = User.class))),
+//                    @ApiResponse(description = "No users found", responseCode = "404")
+//            }
+//    )
+//    public ResponseEntity<List<User>> getAll() {
+//        List<User> users = userService.getAll();
+//        return new ResponseEntity<>(users, HttpStatus.OK);
+//    }
 
     @PutMapping()
     @Operation(
