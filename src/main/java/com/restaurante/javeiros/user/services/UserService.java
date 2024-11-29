@@ -101,7 +101,7 @@ public class UserService {
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             log.error("Password encoder does not match with current password");
-            throw new UserException("Current password is incorrect", HttpStatusProject.VALIDATION);
+            throw new UserException("Current password is incorrect");
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
