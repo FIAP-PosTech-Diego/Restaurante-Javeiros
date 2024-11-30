@@ -6,12 +6,9 @@ import com.restaurante.javeiros.user.dto.LoginUserDto;
 import com.restaurante.javeiros.user.dto.RecoveryJwtTokenDto;
 import com.restaurante.javeiros.user.dto.UserDto;
 import com.restaurante.javeiros.user.entitities.User;
-import com.restaurante.javeiros.exception.HttpStatusProject;
 import com.restaurante.javeiros.user.exception.UserException;
 import com.restaurante.javeiros.user.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController("UserController")
 @RequestMapping("/user")
@@ -61,22 +56,6 @@ public class UserController {
         userService.createUser(createUserDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
-//    @GetMapping("/get-all")
-//    @Operation(
-//            description = "Retrieve all users from the system",
-//            summary = "Get all users",
-//            responses = {
-//                    @ApiResponse(description = "List of users", responseCode = "200",
-//                            content = @Content(mediaType = "application/json",
-//                                    schema = @Schema(implementation = User.class))),
-//                    @ApiResponse(description = "No users found", responseCode = "404")
-//            }
-//    )
-//    public ResponseEntity<List<User>> getAll() {
-//        List<User> users = userService.getAll();
-//        return new ResponseEntity<>(users, HttpStatus.OK);
-//    }
 
     @PutMapping()
     @Operation(

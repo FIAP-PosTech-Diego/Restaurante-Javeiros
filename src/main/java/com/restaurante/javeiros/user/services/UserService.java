@@ -72,12 +72,6 @@ public class UserService {
         userRepository.save(newUser);
     }
 
-    public List<User> getAll() {
-
-        return userRepository.findAll();
-
-    }
-
     @Transactional
     public void updateUser(UserDto userDto) {
         User user = User.builder()
