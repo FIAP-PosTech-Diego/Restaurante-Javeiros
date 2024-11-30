@@ -1,17 +1,17 @@
 package com.restaurante.javeiros.user.services;
 
 
+import com.restaurante.javeiros.security.authentication.JwtTokenService;
+import com.restaurante.javeiros.security.config.SecurityConfiguration;
+import com.restaurante.javeiros.security.userdetails.UserDetailsImpl;
 import com.restaurante.javeiros.user.dto.CreateUserDto;
 import com.restaurante.javeiros.user.dto.LoginUserDto;
 import com.restaurante.javeiros.user.dto.RecoveryJwtTokenDto;
 import com.restaurante.javeiros.user.dto.UserDto;
 import com.restaurante.javeiros.user.entitities.User;
-import com.restaurante.javeiros.exception.HttpStatusProject;
+import com.restaurante.javeiros.user.exception.LoginException;
 import com.restaurante.javeiros.user.exception.UserException;
 import com.restaurante.javeiros.user.repositories.UserRepository;
-import com.restaurante.javeiros.security.authentication.JwtTokenService;
-import com.restaurante.javeiros.security.config.SecurityConfiguration;
-import com.restaurante.javeiros.security.userdetails.UserDetailsImpl;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service("UserService")
 @Slf4j
@@ -49,7 +48,16 @@ public class UserService {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUserDto.email(), loginUserDto.password());
 
-        Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        Authentication authentication;
+
+        try {
+
+            authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+
+        }catch (Exception e){
+            log.error("User or password wrong, email {} ", loginUserDto.email());
+            throw new LoginException("User or password wrong");
+        }
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
@@ -69,7 +77,12 @@ public class UserService {
                 .updatedDate(LocalDateTime.now())
                 .build();
 
-        userRepository.save(newUser);
+        try{
+            userRepository.save(newUser);
+        } catch (Exception e){
+            log.error("User {} already exists ", createUserDto.email());
+            throw new LoginException("User already exists");
+        }
     }
 
     @Transactional
@@ -89,7 +102,13 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(Long userId, String currentPassword, String newPassword) {
+    public void updatePassword(Long userId, String currentPassword, String newPassword, String confirmNewPassword) {
+
+        if (!newPassword.equals(confirmNewPassword)) {
+            log.error("Password and confirm password are different");
+            throw new UserException("Passwords are different");
+        }
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 

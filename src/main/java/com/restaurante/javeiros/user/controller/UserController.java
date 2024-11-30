@@ -100,12 +100,7 @@ public class UserController {
             @RequestParam String confirmNewPassword) {
         log.info("Updating password user - id: {}", userId);
 
-        if (!newPassword.equals(confirmNewPassword)) {
-            log.error("Password and confirm password are different");
-            throw new UserException("Passwords are different");
-        }
-
-        userService.updatePassword(userId, currentPassword, newPassword);
+        userService.updatePassword(userId, currentPassword, newPassword, confirmNewPassword);
 
         return ResponseEntity.ok().build();
     }

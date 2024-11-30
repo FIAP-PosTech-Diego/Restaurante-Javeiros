@@ -1,6 +1,6 @@
 package com.restaurante.javeiros.user.dto;
 
-public record UserNotFoundDTO(
+public record ExceptionDTO(
         String message,
         int status
 ) {
