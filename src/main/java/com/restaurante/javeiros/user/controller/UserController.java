@@ -6,7 +6,6 @@ import com.restaurante.javeiros.user.dto.LoginUserDto;
 import com.restaurante.javeiros.user.dto.RecoveryJwtTokenDto;
 import com.restaurante.javeiros.user.dto.UserDto;
 import com.restaurante.javeiros.user.entitities.User;
-import com.restaurante.javeiros.user.exception.UserException;
 import com.restaurante.javeiros.user.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
